@@ -16,11 +16,13 @@ const capturedEventListeners = {
 
 export const routingEventsListeningTo = ["hashchange", "popstate"];
 
+// 导航，使用window.location.href或者pushState的方式来导航
 export function navigateToUrl(obj) {
   let url;
   if (typeof obj === "string") {
     url = obj;
   } else if (this && this.href) {
+    // 针对a元素，使用document.querySelector('a').addEventListener(singleSpa.navigateToUrl)导航
     url = this.href;
   } else if (
     obj &&
@@ -28,6 +30,7 @@ export function navigateToUrl(obj) {
     obj.currentTarget.href &&
     obj.preventDefault
   ) {
+    // singleSpa.navigateToUrl(document.querySelector('a'));
     url = obj.currentTarget.href;
     obj.preventDefault();
   } else {
@@ -46,6 +49,7 @@ export function navigateToUrl(obj) {
   if (url.indexOf("#") === 0) {
     window.location.hash = destination.hash;
   } else if (current.host !== destination.host && destination.host) {
+    // 导航到非同域下
     if (process.env.BABEL_ENV === "test") {
       return { wouldHaveReloadedThePage: true };
     } else {
@@ -87,10 +91,12 @@ export function setUrlRerouteOnly(val) {
   urlRerouteOnly = val;
 }
 
+// 开启reroute过程，执行子应用的加载或者更换
 function urlReroute() {
   reroute([], arguments);
 }
 
+// 重写pushState和replaceState
 function patchedUpdateState(updateState, methodName) {
   return function () {
     const urlBefore = window.location.href;
@@ -196,6 +202,7 @@ if (isInBrowser) {
   }
 }
 
+// 将str赋予a元素的href，返回a元素
 function parseUri(str) {
   const anchor = document.createElement("a");
   anchor.href = str;

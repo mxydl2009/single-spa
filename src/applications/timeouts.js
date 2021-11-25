@@ -114,6 +114,7 @@ export function reasonableTime(appOrParcel, lifecycle) {
     let finished = false;
     let errored = false;
 
+    // 所有生命周期函数都需要返回一个Promise，mount函数在该Promise.then(() => { // 在这里执行UI的挂载渲染 })
     appOrParcel[lifecycle](getProps(appOrParcel))
       .then((val) => {
         finished = true;
